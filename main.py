@@ -21,6 +21,7 @@ app = FastAPI()
 # Lista de prueba
 usuarios = []
 
+
 # User Models
 class User(BaseModel):      # Schema
     id: int
@@ -85,11 +86,11 @@ def eliminar_usuario(user_id: int):
 def actualizar_usuario(user_id: int, updateUser: User):
     for index, user in enumerate(usuarios):        
         if user["id"] == user_id:
-            usuarios[index]["id"] == updateUser.dict()["id"]
-            usuarios[index]["nombre"] == updateUser.dict()["nombre"]
-            usuarios[index]["apellido"] == updateUser.dict()["apellido"]
-            usuarios[index]["direccion"] == updateUser.dict()["direccion"]
-            usuarios[index]["telefono"] == updateUser.dict()["telefono"]
+            usuarios[index]["id"] = updateUser.dict()["id"]
+            usuarios[index]["nombre"] = updateUser.dict()["nombre"]
+            usuarios[index]["apellido"] = updateUser.dict()["apellido"]
+            usuarios[index]["direccion"] = updateUser.dict()["direccion"]
+            usuarios[index]["telefono"] = updateUser.dict()["telefono"]
             return {"Usuario actualizado correctamente"}
     return {"Usuario no encontrado"}
             
