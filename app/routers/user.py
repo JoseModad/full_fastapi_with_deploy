@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends
 
 # Schemas
-from app.schemas import User, UserId, ShowUser
+from app.schemas import User, ShowUser, UpdateUser
 from app.db.database import get_db
 from sqlalchemy.orm import Session
 from app.db import models
@@ -17,9 +17,6 @@ router = APIRouter(
     tags = ["Users"]
     )
 
-
-# Lista de prueba
-usuarios =[]
 
 # Rutas
 
@@ -55,15 +52,7 @@ def obtener_usuario(user_id: int, db: Session = Depends(get_db)):
     if not usuario:
         return {"respuesta": "usuario no encontrado"}
     return usuario
-    
 
-@router.post("/obtener_usuario")
-def obtener_usuario(user_id: UserId):
-    for user in usuarios:
-        if user["id"] == user_id.id:
-            return {"usuario": user}
-        
-        return {"respuesta": "usuario no encontrado"}
     
     
 @router.delete("/")
@@ -77,14 +66,12 @@ def eliminar_usuario(user_id: int, db: Session = Depends(get_db)):
         
 
 
-@router.put("/{user_id}")
-def actualizar_usuario(user_id: int, updateUser: User):
-    for index, user in enumerate(usuarios):        
-        if user["id"] == user_id:
-            usuarios[index]["id"] = updateUser.dict()["id"]
-            usuarios[index]["nombre"] = updateUser.dict()["nombre"]
-            usuarios[index]["apellido"] = updateUser.dict()["apellido"]
-            usuarios[index]["direccion"] = updateUser.dict()["direccion"]
-            usuarios[index]["telefono"] = updateUser.dict()["telefono"]
-            return {"Usuario actualizado correctamente"}
-    return {"Usuario no encontrado"}
+@router.patch("/{user_id}")
+def actualizar_usuario(user_id: int, updateUser: UpdateUser, db: Session = Depends(get_db)):
+    usuario = db.query(models.User).filter(models.User.id == user_id)
+    if not usuario.first():
+        return {"respuesta": "usuario no encontrado"}
+    usuario.update(updateUser.dict(exclude_unset = True))
+    db.commit()
+
+    return {"Usuario actualizado correctamente"}
