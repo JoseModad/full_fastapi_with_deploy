@@ -7,12 +7,13 @@ import uvicorn
 # Instancia Router
 from app.routers import user
 from app.db.database import Base, engine
-from app.routers import user
+from app.routers import user, auth
 
 
 # Instancia de fastapi
 app = FastAPI()
 app.include_router(user.router)
+app.include_router(auth.router)
 
 
 
