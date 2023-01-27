@@ -8,17 +8,25 @@ from typing import Optional
 from datetime import datetime
 
 
-
 # User Models
 class User(BaseModel):      # Schema
-    id: int
+    username : str
+    password : str
     nombre: str
     apellido: str
     direccion: Optional[str]
     telefono: int
-    correo = str
+    correo : str
     creacion_user: datetime = datetime.now()
     
 
 class UserId(BaseModel):
     id: int
+    
+    
+class ShowUser(BaseModel):
+    username : str
+    nombre : str
+    correo : str
+    class Config():
+        orm_mode = True
