@@ -167,6 +167,7 @@ param @ file:///tmp/build/80754af9/param_1636647414893/work
 parsel @ file:///tmp/build/80754af9/parsel_1646722533460/work
 parso @ file:///opt/conda/conda-bld/parso_1641458642106/work
 partd @ file:///opt/conda/conda-bld/partd_1647245470509/work
+passlib==1.7.4
 pathlib @ file:///Users/ktietz/demo/mc3/conda-bld/pathlib_1629713961906/work
 pathspec @ file:///tmp/abs_1foqurpsov/croots/recipe/pathspec_1659627126545/work
 patsy==0.5.2
