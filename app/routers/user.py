@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 from app.schemas import User, ShowUser, UpdateUser
 from app.db.database import get_db
 from sqlalchemy.orm import Session
-from app.db import models
+from app.repository import user
 
 # Typing
 from typing import List
@@ -22,56 +22,32 @@ router = APIRouter(
 
 @router.get("/", response_model = List[ShowUser])
 def obtener_usuarios(db: Session = Depends(get_db)):
-    data = db.query(models.User).all()    
+    data = user.obtener_usuarios(db)
     return data
     
 
 
 @router.post("/")
-def crear_usuario(user: User, db: Session = Depends(get_db)):
-    usuario = user.dict()
-    nuevo_usuario = models.User(           
-        username = usuario["username"],
-        password = usuario["password"],
-        nombre = usuario["nombre"],
-        apellido = usuario["apellido"],
-        direccion = usuario["direccion"],
-        telefono = usuario["telefono"],
-        correo = usuario["correo"],
-    )
-    db.add(nuevo_usuario)
-    db.commit()
-    db.refresh(nuevo_usuario)
-    
+def crear_usuario(usuario: User, db: Session = Depends(get_db)):
+    user.crear_usuario(usuario, db)    
     return {"Respuesta": "Usuario creado satisfactoriamente"}
 
 
 @router.get("/{user_id}", response_model = ShowUser)
 def obtener_usuario(user_id: int, db: Session = Depends(get_db)):
-    usuario = db.query(models.User).filter(models.User.id == user_id).first()
-    if not usuario:
-        return {"respuesta": "usuario no encontrado"}
+    usuario = user.obtener_usuario(user_id, db)
     return usuario
 
     
     
 @router.delete("/")
 def eliminar_usuario(user_id: int, db: Session = Depends(get_db)):
-    usuario = db.query(models.User).filter(models.User.id == user_id)
-    if not usuario.first():
-        return {"respuesta": "usuario no encontrado"}
-    usuario.delete(synchronize_session = False)
-    db.commit()            
-    return {"Respuesta": "Usuario eliminado correctamente"}    
+    res = user.eliminar_usuario(user_id, db)                
+    return res    
         
 
 
 @router.patch("/{user_id}")
 def actualizar_usuario(user_id: int, updateUser: UpdateUser, db: Session = Depends(get_db)):
-    usuario = db.query(models.User).filter(models.User.id == user_id)
-    if not usuario.first():
-        return {"respuesta": "usuario no encontrado"}
-    usuario.update(updateUser.dict(exclude_unset = True))
-    db.commit()
-
-    return {"Usuario actualizado correctamente"}
+    res = user.actualizar_usuario(user_id, updateUser, db)
+    return res
