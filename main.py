@@ -10,12 +10,6 @@ from app.db.database import Base, engine
 from app.routers import user
 
 
-def create_tables():
-    Base.metadata.create_all(bind = engine)
-
-create_tables()
-
-
 # Instancia de fastapi
 app = FastAPI()
 app.include_router(user.router)
