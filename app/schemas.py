@@ -2,7 +2,7 @@
 from pydantic import BaseModel
 
 # Typing
-from typing import Optional
+from typing import Optional, Union
 
 # Python
 from datetime import datetime
@@ -41,3 +41,14 @@ class ShowUser(BaseModel):
 class Login(BaseModel):
     username: str
     password: str
+    
+
+# Schemes Crypto-Jose
+   
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Union[str, None] = None
