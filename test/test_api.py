@@ -58,8 +58,8 @@ def override_get_db():
 
 app.dependency_overrides[get_db] =  override_get_db 
 
-def test_crear_usuario():
-    time.sleep(2)
+
+def test_crear_usuario():    
     usuario = {
         "username": "marty",
         "password": "0000",
@@ -71,11 +71,46 @@ def test_crear_usuario():
         "creacion_user": "2023-01-30T20:15:27.362232"
     }
     response = cliente.post("/user/", json = usuario)
-    assert response.status_code == 201    
+    assert response.status_code == 401     
+    usuario_login = {
+        "username": "prueba",
+        "password": "0000"
+    }     
+    response_token = cliente.post("/login/", data = usuario_login)
+    assert response_token.status_code == 200
+    assert response_token.json()["token_type"] == "bearer"    
+    headers = {
+        "Authorization": f"Bearer {response_token.json()['access_token']}"         
+    }
+    response = cliente.post("/user", json = usuario, headers = headers)
+    assert response.status_code == 201
     assert response.json()["Respuesta"] == "Usuario creado satisfactoriamente"
     
+
+def test_obtener_usuarios():
+    usuario_login = {
+        "username": "prueba",
+        "password": "0000"
+    }
+    response_token = cliente.post("/login/", data = usuario_login)
+    assert response_token.status_code == 200
+    assert response_token.json()["token_type"] == "bearer"
+    print(response_token.json()["access_token"])
+    headers = {
+        "Authorization": f"Bearer {response_token.json()['access_token']}"         
+    }
+    response = cliente.get("/user/", headers = headers)
+    print(response.json())
     
     
+
+def test_obtener_usuario():
+    response = cliente.get("/user/1")
+    assert response.json()["username"] == "prueba"
+    
+    
+   
 def test_delete_database():
+    time.sleep(2)
     db_path = os.path.join(os.path.dirname(__file__), 'test.db') 
     os.remove(db_path)
