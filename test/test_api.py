@@ -95,12 +95,11 @@ def test_obtener_usuarios():
     response_token = cliente.post("/login/", data = usuario_login)
     assert response_token.status_code == 200
     assert response_token.json()["token_type"] == "bearer"
-    print(response_token.json()["access_token"])
     headers = {
         "Authorization": f"Bearer {response_token.json()['access_token']}"         
     }
     response = cliente.get("/user/", headers = headers)
-    print(response.json())
+    assert len(response.json()) == 2
     
     
 
@@ -108,8 +107,14 @@ def test_obtener_usuario():
     response = cliente.get("/user/1")
     assert response.json()["username"] == "prueba"
     
-    
-   
+ 
+def test_eliminar_usuario():
+    response = cliente.delete("/user/1")    
+    assert response.json()["respuesta"] == 'Usuario eliminado correctamente'
+    response_user = cliente.get("/user/1")
+    assert response_user.json()["detail"] == "No existe el usuario con el id: 1"
+        
+
 def test_delete_database():
     time.sleep(2)
     db_path = os.path.join(os.path.dirname(__file__), 'test.db') 

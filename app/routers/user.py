@@ -41,7 +41,7 @@ def obtener_usuario(user_id: int, db: Session = Depends(get_db)):
 
     
     
-@router.delete("/", status_code = status.HTTP_200_OK)
+@router.delete("/{user_id}", status_code = status.HTTP_200_OK)
 def eliminar_usuario(user_id: int, db: Session = Depends(get_db)):
     res = user.eliminar_usuario(user_id, db)                
     return res    
