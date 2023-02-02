@@ -66,4 +66,4 @@ def actualizar_usuario(user_id, updateUser, db: Session):
     usuario.update(updateUser.dict(exclude_unset = True))
     db.commit()
 
-    return {"Usuario actualizado correctamente"}
+    return {"detail": "Usuario actualizado correctamente"}
