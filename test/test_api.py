@@ -123,6 +123,15 @@ def test_actualizar_usuario():
     assert response.json()['detail'] == 'Usuario actualizado correctamente'
     response_user = cliente.get("/user/2") 
     assert response_user.json()['username'] == 'Marty!!' 
+    assert response_user.json()['nombre'] == 'martina'
+    
+def test_no_ecuentra_usuario():
+    usuario = {
+    "username": "Marty!!",
+    }
+    response = cliente.patch("/user/8733", json = usuario)
+    assert response.json()["detail"] == 'No existe el usuario con el id: 8733, por lo tanto no se puede actualizar!!'
+        
 
 def test_delete_database():
     time.sleep(2)
