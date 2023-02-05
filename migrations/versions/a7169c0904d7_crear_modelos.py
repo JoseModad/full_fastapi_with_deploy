@@ -1,8 +1,8 @@
 """crear modelos
 
-Revision ID: d7852c2db0b4
+Revision ID: a7169c0904d7
 Revises: 
-Create Date: 2023-01-27 11:02:33.995076
+Create Date: 2023-02-04 23:35:05.759132
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd7852c2db0b4'
+revision = 'a7169c0904d7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,7 +28,6 @@ def upgrade() -> None:
     sa.Column('telefono', sa.String(), nullable=True),
     sa.Column('correo', sa.String(), nullable=True),
     sa.Column('estado', sa.Boolean(), nullable=True),
-    sa.Column('estado2', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('correo'),
     sa.UniqueConstraint('username')
