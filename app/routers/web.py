@@ -1,11 +1,14 @@
 from fastapi.templating import Jinja2Templates
 from fastapi import Request, APIRouter
+# import requests
+import aiohttp
 
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory = "app/templates")
 
+url = "http://localhost:8000"
 
 @router.get("/")
 def home(request: Request):
@@ -14,10 +17,11 @@ def home(request: Request):
 
 @router.get("/register")
 def registration(request: Request):
-    return templates.TemplateResponse("create_user.html", {"request": request})
+    msj = ""
+    return templates.TemplateResponse("create_user.html", {"request": request, "msj": msj})
 
 
-@router.post("/register")
+@router.post("/register") 
 async def registration(request: Request):
     form = await request.form()
     usuario = {
@@ -30,4 +34,17 @@ async def registration(request: Request):
         "correo": form.get("correo")
     }
     print(usuario)
-    return templates.TemplateResponse("create_user.html", {"request": request})
+    url_post = f"{url}/user/"
+    print(f"{url_post}")
+    # r = requests.post(url = url_post, json = usuario)
+    async with aiohttp.ClientSession() as session:
+        response = await session.request(method = "POST", url = url_post, json = usuario)
+        response_json = await response.json()        
+        if "Respuesta" in response_json:
+            msj = "Usuario creado satisfactoriamente!!"
+            type_alert = "primary"
+        else:
+            msj = "Usuario no fue creado"
+            type_alert = "danger"
+        print(msj)
+        return templates.TemplateResponse("create_user.html", {"request": request, "msj": msj, "type_alert": type_alert})
