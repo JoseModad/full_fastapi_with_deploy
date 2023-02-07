@@ -22,14 +22,14 @@ router = APIRouter(
 # Rutas
 
 @router.get("/", response_model = List[ShowUser], status_code = status.HTTP_200_OK)
-def obtener_usuarios(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def obtener_usuarios(db: Session = Depends(get_db)):
     data = user.obtener_usuarios(db)
     return data
     
 
 
 @router.post("/", status_code = status.HTTP_201_CREATED)
-def crear_usuario(usuario: User, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def crear_usuario(usuario: User, db: Session = Depends(get_db)):
     user.crear_usuario(usuario, db)    
     return {"Respuesta": "Usuario creado satisfactoriamente"}
 
