@@ -4,7 +4,7 @@ from fastapi import Request, APIRouter
 import aiohttp
 
 
-router = APIRouter()
+router = APIRouter(include_in_schema = False)
 
 templates = Jinja2Templates(directory = "app/templates")
 
@@ -32,11 +32,9 @@ async def registration(request: Request):
         "direccion": form.get("direccion"),
         "telefono": form.get("telefono"),
         "correo": form.get("correo")
-    }
-    print(usuario)
-    url_post = f"{url}/user/"
-    print(f"{url_post}")
-    # r = requests.post(url = url_post, json = usuario)
+    } 
+       
+    url_post = f"{url}/user/"     
     async with aiohttp.ClientSession() as session:
         response = await session.request(method = "POST", url = url_post, json = usuario)
         response_json = await response.json()        
@@ -46,5 +44,5 @@ async def registration(request: Request):
         else:
             msj = "Usuario no fue creado"
             type_alert = "danger"
-        print(msj)
+        
         return templates.TemplateResponse("create_user.html", {"request": request, "msj": msj, "type_alert": type_alert})
