@@ -7,7 +7,7 @@ import uvicorn
 # Instancia Router
 from app.routers import user
 from app.db.database import Base, engine
-from app.routers import user, auth
+from app.routers import user, auth, web
 
 
 # Instancia de Fastapi
@@ -16,8 +16,9 @@ app = FastAPI()
 # Instancias Router
 app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(web.router)
 
 
-# # Corriendo la aplicacion
-# if __name__=="__main__":
-#     uvicorn.run("main:app", port = 8000, reload = True)
+# Corriendo la aplicacion
+if __name__=="__main__":
+    uvicorn.run("main:app", port = 8000, reload = True)
